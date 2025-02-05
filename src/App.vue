@@ -1,20 +1,28 @@
 <template>
   <div id="app">
-    <h1>test</h1>
-    <myComponent></myComponent>
+    <appHeader :appState="appState"></appHeader>
+    <homepage v-if="appState == 'homepage'"></homepage>
   </div>
 </template>
 
 <script>
 
-import MyComponent from './components/myComponent.vue'
+import Homepage from './components/homepage.vue'
+import AppHeader from './components/appHeader.vue'
 import store from '@/store'
 import { getData } from './import.js'
 
 export default {
   name: 'App',
   components: {
-    MyComponent
+    Homepage,
+    AppHeader
+  },
+
+  data(){
+    return {
+      appState:"coucou"
+    }
   },
 
   computed: {
@@ -43,9 +51,12 @@ export default {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    h1{
-      color:green;
-    }
+    background-color:$deepBlue;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
   
 </style>

@@ -1,7 +1,6 @@
 <template>
-  <div id="myComponent">
-     <span>Je suis un composant</span>
-     {{ myData }}
+  <div id="homepage">
+    <div>Homepage</div>
   </div>
 </template>
 
@@ -9,7 +8,7 @@
 import store from '@/store'
 
 export default {
-  name: 'MyComponent',
+  name: 'Homepage',
   data(){
     return {
     }
@@ -28,7 +27,7 @@ export default {
   },
 
   created(){
-    console.log("myComponent created")
+    console.log("homepage created")
   }
 
 }
@@ -39,15 +38,14 @@ export default {
   
   /* overload fonts path, to delete when parent has access */
   @import "../../css/overload-fonts.css";
-
-  span{
-    color:red;
-  }
-
-  @media (max-width: 728px) {
-    span{
-      color:blue;
-    }    
+  @import "../../css/variables.scss";
+  #homepage{
+    background-color:$deepBlue;
+    position: absolute;
+    top: 120px;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
 
