@@ -56,7 +56,7 @@
             left:30px;
             top:50%;
             transform: translate(0, -50%);
-            width: 260px;
+            width: 220px;
             height: auto;
         }
         h1{
@@ -74,6 +74,9 @@
             height: 120px;
             h1{
                 display: none;
+            }
+            img{
+                width: 260px;
             }
         }
     }

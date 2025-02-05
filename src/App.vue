@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <appHeader :appState="appState"></appHeader>
-    <homepage v-if="appState == 'homepage'"></homepage>
+    <homepage v-if="appState == 'homepage' " @changeAppState="changeAppState"></homepage>
+    <frisepage v-if="appState == 'frise' "></frisepage>
   </div>
 </template>
 
@@ -11,17 +12,19 @@ import Homepage from './components/homepage.vue'
 import AppHeader from './components/appHeader.vue'
 import store from '@/store'
 import { getData } from './import.js'
+import Frisepage from './components/frisepage.vue'
 
 export default {
   name: 'App',
   components: {
     Homepage,
-    AppHeader
+    AppHeader,
+    Frisepage
   },
 
   data(){
     return {
-      appState:"coucou"
+      appState:"homepage"
     }
   },
 
@@ -36,9 +39,18 @@ export default {
       
     }
   },
+
+  methods:{
+    changeAppState(state){
+      this.appState = state
+    }
+  },
   
   created(){
     getData(store)
+    if(window.location.pathname.includes('/frise')){
+      this.changeAppState('frise')
+    }
   }
 }
 </script>

@@ -1,6 +1,9 @@
 <template>
   <div id="homepage">
-    <div>Homepage</div>
+    <div id="homepageContainer">
+      <div id="homepageTitle"><span>Découvrez</span><br><span>nos temps forts</span></div>
+      <div id="homepageButton" @click="changeAppState('frise')">Explorer</div>
+    </div>
   </div>
 </template>
 
@@ -21,6 +24,10 @@ export default {
     }
   },
   methods: {
+    changeAppState(state){
+      this.$emit('changeAppState', state)
+      window.history.pushState({}, '', '/frise')
+    }
   },
 
   watch:{
@@ -46,6 +53,41 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    #homepageContainer{
+      position: absolute;
+      top: 190px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      display: block;
+      #homepageTitle{
+        font-family: Montserrat-ExtraBold;
+        font-size: 45px;
+        color: white;
+        display: block;
+        margin-bottom: 8px;
+        position: relative;
+        span{
+          background-color: $tropicalBlue;
+          padding: 8px 16px;
+          margin-bottom: 8px;
+          display: inline-block;
+        }
+      }
+      #homepageButton{
+        font-family:Figtree-Bold;
+        font-size:18px;
+        color:black;
+        padding: 13px 40px 15px 40px;
+        background-color: $yellow;
+        display: inline-block;
+        border-radius: 40px;
+        position: relative;
+        cursor: pointer;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+    }
   }
 
 
