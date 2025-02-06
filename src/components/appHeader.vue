@@ -81,7 +81,7 @@
         }
     }
 
-    @media (max-width: 1079px) {
+    @media (max-width: 1149px) {
         #appHeader{
             h1{
                left:auto;
@@ -93,9 +93,19 @@
 
     @media (max-width: 979px) {
         #appHeader{
-            h1{
-                display: none;
-            }
+          height: 60px;
+          &.homepage{
+            height: 100px;
+          }
+          h1{
+              display: none;
+          }
+          img{
+            left:auto;
+            right: 12px;
+            width: 144px;
+            
+          }
         }
     }
   

@@ -1,12 +1,12 @@
 <template>
     <div id="frisepage" v-if="myData">
-      <div class="nav_btn nav_btn_prev" @click="prevEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
-      <div id="event_container">
+      <div class="nav_btn nav_btn_prev" :class="(isFirst())?'disabled':''" @click="prevEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
+      <div id="event_container" :class="{'prev_animation': prevAnimation, 'next_animation': nextAnimation, 'is_hidden_prev': isHiddenPrev, 'is_hidden_next': isHiddenNext}">
         <div id="event_date">{{ eventData.datelabel }}</div>
         <div id="event_image_container">
             <div id="event_image" :style="{ backgroundImage: 'url(' + require('@/assets/img/event/'+eventData.id+'.png') + ')' }"></div>
             <div id="event_title">
-                <div v-for="(part, index) in eventData.titre.match(/.{1,25}(?:\s|$)/g)" :key="index">
+                <div v-for="(part, index) in eventData.titre.match(getRegex())" :key="index">
                 <span v-html="part.trim()"></span><br>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             </div>
         </div>
       </div>
-      <div class="nav_btn nav_btn_next" @click="nextEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
+      <div class="nav_btn nav_btn_next" :class="(isLast())?'disabled':''" @click="nextEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
     </div>
   </template>
   
@@ -41,7 +41,11 @@
     name: 'Frisepage',
     data(){
       return {
-        currentEventId:null
+        currentEventId:null,
+        prevAnimation:false,
+        nextAnimation:false,
+        isHiddenPrev:false,
+        isHiddenNext:false
       }
     },
     props: {
@@ -55,7 +59,7 @@
       },
       eventData(){
         return this.myData.find(event => event.dataid == this.currentEventId)
-      }
+      },
     },
     methods: {
 
@@ -69,15 +73,34 @@
             }
         },
         prevEvent(){
+            var self = this;
             if(this.myData[this.myData.indexOf(this.eventData) - 1]){
-                this.currentEventId = this.myData[this.myData.indexOf(this.eventData) - 1].dataid
-                window.location.hash = this.currentEventId
+                this.prevAnimation = true;
+                setTimeout(() => {
+                    self.currentEventId = self.myData[self.myData.indexOf(self.eventData) - 1].dataid
+                    window.location.hash = self.currentEventId
+                    self.isHiddenPrev = true;
+                    setTimeout(() => {
+                        self.isHiddenPrev = false;
+                        self.prevAnimation = false;
+                    }, 20);
+                }, 750);
+                
             }
         },
         nextEvent(){
+            var self = this;
             if(this.myData[this.myData.indexOf(this.eventData) + 1]){
-                this.currentEventId = this.myData[this.myData.indexOf(this.eventData) + 1].dataid
-                window.location.hash = this.currentEventId
+                this.nextAnimation = true;
+                setTimeout(() => {
+                    self.currentEventId = self.myData[self.myData.indexOf(self.eventData) + 1].dataid
+                    window.location.hash = self.currentEventId
+                    self.isHiddenNext = true;
+                    setTimeout(() => {
+                        self.isHiddenNext = false;
+                        self.nextAnimation = false;
+                    }, 20);
+                }, 750);
             }
         },
         getIcon(type){
@@ -91,6 +114,22 @@
                 return require('@/assets/img/document-icon.svg')
             }else{
                 return require('@/assets/img/link-icon.svg')
+            }
+        },
+
+        isLast(){
+            return this.myData.indexOf(this.eventData) == this.myData.length - 1
+        },
+        isFirst(){
+            return this.myData.indexOf(this.eventData) == 0
+        },
+        getRegex(){
+            if(window.innerWidth > 1149){
+                return /.{1,25}(?:\s|$)/g
+            }else if(window.innerWidth > 979){
+                return /.{1,40}(?:\s|$)/g
+            }else{
+                return /.{1,35}(?:\s|$)/g
             }
         }
     },
@@ -126,8 +165,41 @@
       right: 0;
       bottom: 0;
       #event_container{
+        width: 100%;
         position: relative;
         top:55px;
+        transform: translateX(0);
+        transition: transform 1.1s ease-in-out;
+        &.is_hidden_prev{
+            transition: none;
+            transform: translateX(-100%)!important;
+        }
+        &.prev_animation{
+            transform: translateX(100%);
+            #event_image_container{
+                #event_title{
+                    margin-left:0px;
+                }
+                #event_buttons{
+                    margin-left:0px;
+                }
+            }
+        }
+        &.is_hidden_next{
+            transition: none;
+            transform: translateX(100%)!important;
+        }
+        &.next_animation{
+            transform: translateX(-100%);
+            #event_image_container{
+                #event_title{
+                    margin-left:0px;
+                }
+                #event_buttons{
+                    margin-left:0px;
+                }
+            }
+        }
         #event_date{
           font-family: Figtree-ExtraBold;
           font-size: 24px;
@@ -161,7 +233,7 @@
                 display: inline-block;
                 left:50%;
                 margin-left:208px;
-
+                transition: margin-left 0.9s ease-in-out;
                 span{
                     background-color:$fushia;
                     padding:6px 12px;
@@ -175,7 +247,8 @@
             bottom:-285px;
             left:50%;
             margin-left:-208px;
-            transform: translateX(-100%);  
+            transform: translateX(-100%); 
+            transition: margin-left 0.9s ease-in-out;
             .event_button{
                 text-decoration: none;
                 color:black;
@@ -204,6 +277,11 @@
         top:50%;
         transform: translateY(-50%);
         cursor: pointer;
+        z-index: 1000;
+        &.disabled{
+            opacity: 0.2;
+            pointer-events: none;
+        }
         &:hover{
             background-color:white;
             svg *{
@@ -228,6 +306,100 @@
             }
         }
       }
+    }
+
+    @media (max-width: 1149px) {
+        #frisepage{
+            #event_container{
+                top:32px;
+                #event_image_container{
+                    #event_title{
+                        left:50%;
+                        margin-left:-200px;
+                        top:288px;
+                        position: relative;
+                    }
+                    #event_buttons{
+                        position:relative;
+                        bottom:auto;
+                        top:288px;
+                        left:50%;
+                        margin-left:-200px;
+                        transform: translateX(0);
+                        width: 348px;
+                        display: flex;
+                        flex-direction: row;
+                        flex-wrap: wrap;
+                        justify-content: space-between;
+                        .event_button{
+                            
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    
+
+    @media (max-width: 979px) {
+        #frisepage{
+            top:60px;
+            #event_container{
+                top:12px;
+                &.prev_animation{
+                    #event_image_container{
+                        #event_title{
+                            margin-left:-170px;
+                        }
+                        #event_buttons{
+                            margin-left:-170px;
+                        }
+                    }
+                }
+                &.next_animation{
+                    #event_image_container{
+                        #event_title{
+                            margin-left:-170px;
+                        }
+                        #event_buttons{
+                            margin-left:-170px;
+                        }
+                    }
+                }
+                #event_image_container{
+                    top:8px;
+                    #event_image{
+                        width: 344px;
+                        height: 229px;
+                    }
+                    #event_title{
+                        left:50%;
+                        margin-left:-170px;
+                        top:244px;
+                        position: relative;
+                        
+                    }
+                    #event_buttons{
+                        position:relative;
+                        bottom:auto;
+                        top:248px;
+                        left:50%;
+                        margin-left:-170px;
+                        transform: translateX(0);
+                        width: 340px;
+                        display: flex;
+                        flex-direction: row;
+                        flex-wrap: wrap;
+                        justify-content: space-between;
+                        .event_button{
+                            width: 150px;
+                        }
+                    }
+                }
+                
+            }
+        }
     }
   
   
