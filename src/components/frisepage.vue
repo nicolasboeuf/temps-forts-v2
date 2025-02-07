@@ -31,17 +31,21 @@
         </div>
       </div>
       <div class="nav_btn nav_btn_next" :class="(isLast())?'disabled':''" @click="nextEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
+      <bottomFrise></bottomFrise>
     </div>
   </template>
   
   <script>
   import store from '@/store'
-  
+  import bottomFrise from './bottomFrise.vue'
+
   export default {
     name: 'Frisepage',
+    components: {
+      bottomFrise
+    },
     data(){
       return {
-        currentEventId:null,
         prevAnimation:false,
         nextAnimation:false,
         isHiddenPrev:false,
@@ -60,15 +64,18 @@
       eventData(){
         return this.myData.find(event => event.dataid == this.currentEventId)
       },
+      currentEventId(){
+        return store.state.currentEventId
+      }
     },
     methods: {
 
         setCurrentEventId(){
             if(window.location.hash) {
-                this.currentEventId = window.location.hash.substring(1)
+                this.$store.commit('setCurrentEventId',window.location.hash.substring(1))
             }else{
                 let lastEvent = this.myData[this.myData.length - 1]
-                this.currentEventId = lastEvent.dataid
+                this.$store.commit('setCurrentEventId',lastEvent.dataid)
                 window.location.hash = lastEvent.dataid
             }
         },
@@ -77,7 +84,7 @@
             if(this.myData[this.myData.indexOf(this.eventData) - 1]){
                 this.prevAnimation = true;
                 setTimeout(() => {
-                    self.currentEventId = self.myData[self.myData.indexOf(self.eventData) - 1].dataid
+                    this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) - 1].dataid)
                     window.location.hash = self.currentEventId
                     self.isHiddenPrev = true;
                     setTimeout(() => {
@@ -91,9 +98,10 @@
         nextEvent(){
             var self = this;
             if(this.myData[this.myData.indexOf(this.eventData) + 1]){
+                console.log(this.myData[this.myData.indexOf(this.eventData) + 1].dataid)
                 this.nextAnimation = true;
                 setTimeout(() => {
-                    self.currentEventId = self.myData[self.myData.indexOf(self.eventData) + 1].dataid
+                    this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) + 1].dataid)
                     window.location.hash = self.currentEventId
                     self.isHiddenNext = true;
                     setTimeout(() => {

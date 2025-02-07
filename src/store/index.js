@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     myData:undefined,
-    endImport:false
+    endImport:false,
+    currentEventId:null
   },
   mutations: {
     initializeData (state,data) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     endImport(state,value){
       state.endImport = value
+    },
+    setCurrentEventId(state,value){
+      state.currentEventId = value
     }
   }
 })
