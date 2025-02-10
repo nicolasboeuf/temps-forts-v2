@@ -2,7 +2,7 @@
     <div id="appHeader" :class="{'homepage':appState == 'homepage'}">
       <div>
         <img src="@/assets/logo-ap.png" alt="logo">
-        <h1>Nos temps forts</h1>
+        <h1 @click="callChangeAppState('homepage')">Nos temps forts</h1>
       </div>
     </div>
   </template>
@@ -25,6 +25,10 @@
       }
     },
     methods: {
+      callChangeAppState(state){
+        this.$parent.changeAppState(state)
+        window.history.pushState({}, '', '/')
+      }
     },
   
     watch:{
@@ -69,6 +73,10 @@
             top:50%;
             transform: translate(-50%, -50%);
             font-family: "Figtree-Bold";
+            cursor: pointer;
+            &:hover{
+              text-decoration: underline;
+            }
         }
         &.homepage{
             height: 120px;

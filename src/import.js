@@ -59,6 +59,8 @@ export const getData = async function (store) {
             allItems.push(itemObj)
         });
 
+        console.log(allItems)
+
         store.commit('initializeData',allItems)
         store.commit("endImport",true)
         return true

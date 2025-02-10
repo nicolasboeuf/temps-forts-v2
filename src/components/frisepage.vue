@@ -98,7 +98,6 @@
         nextEvent(){
             var self = this;
             if(this.myData[this.myData.indexOf(this.eventData) + 1]){
-                console.log(this.myData[this.myData.indexOf(this.eventData) + 1].dataid)
                 this.nextAnimation = true;
                 setTimeout(() => {
                     this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) + 1].dataid)
@@ -145,7 +144,6 @@
     watch:{
         dataImport:function(){
             this.setCurrentEventId()
-            console.log(this.myData)
         },
         '$route.hash': function() {
             this.setCurrentEventId()
@@ -281,7 +279,7 @@
         position: absolute;
         width: 68px;
         height: 68px;
-        background-color:$deepBlue;
+        background-color:$nightBlue;
         top:50%;
         transform: translateY(-50%);
         cursor: pointer;
