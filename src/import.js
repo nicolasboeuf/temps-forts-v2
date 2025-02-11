@@ -82,6 +82,11 @@ export const getData = async function (store) {
 
         allItems.reverse();
 
+        allItems.forEach((item, index) => {
+            item.color_theme = (index % 6) + 1;
+        });
+
+        console.log(allItems)
         store.commit('initializeData',allItems)
         store.commit("endImport",true)
         return true

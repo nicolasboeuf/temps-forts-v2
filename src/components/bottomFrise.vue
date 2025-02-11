@@ -1,20 +1,25 @@
 <template>
     <div id="bottomFrise" v-if="myData">
-        <div class="frise_control control_left">
-            <div class="frise_control_btn" :class="(isFirst())?'disabled':''" @click="callPrevEvent"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><mask id="mask0_202_3653" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="10" width="24" height="24"><rect width="24" height="24" transform="matrix(-1 0 0 1 37 10)" fill="#D9D9D9"/></mask><g mask="url(#mask0_202_3653)"><path d="M21.0001 31.6537L30.6538 21.9999L21.0001 12.3462L19.5808 13.7654L27.8156 21.9999L19.5808 30.2344L21.0001 31.6537Z" fill="#005DA4"/></g></svg></div>
-        </div>
-        <div id="frise_event_wrapper" :style="getScrollerLeft()">
-            <div class="placeholder past" v-for="pastIndex in 20" :style="getPastLeft(pastIndex)" :key="pastIndex+'past'"></div>
-            <div class="frise_event" v-for="event,index in reverseOrderEvents" :key="event.id" :style="getStyle(index,event)" :class="getClass(event)" >
-                <div class="year">{{getYear(event)}}</div>
-                <div class="month">{{ getMonth(event) }}</div>
+        <div id="desktop_frise">
+            <div class="frise_control control_left">
+                <div class="frise_control_btn" @click="skipIndex++" :class="(isFirst())?'disabled':''"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><mask id="mask0_202_3653" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="10" width="24" height="24"><rect width="24" height="24" transform="matrix(-1 0 0 1 37 10)" fill="#D9D9D9"/></mask><g mask="url(#mask0_202_3653)"><path d="M21.0001 31.6537L30.6538 21.9999L21.0001 12.3462L19.5808 13.7654L27.8156 21.9999L19.5808 30.2344L21.0001 31.6537Z" fill="#005DA4"/></g></svg></div>
             </div>
-            <div class="placeholder futur" v-for="futurIndex in 20" :style="getFuturLeft(futurIndex)" :key="futurIndex+'futur'"></div>
+            <div id="frise_event_wrapper" :style="getScrollerLeft()">
+                <div class="placeholder past" v-for="pastIndex in 20" :style="getPastLeft(pastIndex)" :key="pastIndex+'past'"></div>
+                <div class="frise_event" @click="jumpToEvent(event)" v-for="event,index in reverseOrderEvents" :key="event.id" :style="getStyle(index,event)" :class="getClass(event)" >
+                    <div class="year">{{getYear(event)}}</div>
+                    <div class="month">{{ getMonth(event) }}</div>
+                    <div class="event_tooltip">
+                        <span>{{numberToMonth[parseInt(event.mois)-1][event.mois]}} {{event.annee}}</span>
+                    </div>
+                </div>
+                <div class="placeholder futur" v-for="futurIndex in 20" :style="getFuturLeft(futurIndex)" :key="futurIndex+'futur'"></div>
+            </div>
+            <div class="frise_control control_right">
+                <div class="frise_control_btn" @click="skipIndex--" :class="(isLast())?'disabled':''"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><mask id="mask0_202_3653" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="10" width="24" height="24"><rect width="24" height="24" transform="matrix(-1 0 0 1 37 10)" fill="#D9D9D9"/></mask><g mask="url(#mask0_202_3653)"><path d="M21.0001 31.6537L30.6538 21.9999L21.0001 12.3462L19.5808 13.7654L27.8156 21.9999L19.5808 30.2344L21.0001 31.6537Z" fill="#005DA4"/></g></svg></div>
+            </div>
         </div>
-        <div class="frise_control control_right">
-            <div class="frise_control_btn" :class="(isLast())?'disabled':''" @click="callNextEvent"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><mask id="mask0_202_3653" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="10" width="24" height="24"><rect width="24" height="24" transform="matrix(-1 0 0 1 37 10)" fill="#D9D9D9"/></mask><g mask="url(#mask0_202_3653)"><path d="M21.0001 31.6537L30.6538 21.9999L21.0001 12.3462L19.5808 13.7654L27.8156 21.9999L19.5808 30.2344L21.0001 31.6537Z" fill="#005DA4"/></g></svg></div>
-        </div>
-        
+        <div id="mobile_frise"><span>{{numberToMonth[parseInt(eventData.mois)-1][eventData.mois]}} {{eventData.annee}}</span></div>
     </div>
   </template>
   
@@ -25,7 +30,8 @@
     name: 'bottomFrise',
     data(){
       return {
-        numberToMonth:[{"1":"Janvier"},{"2":"Février"},{"3":"Mars"},{"4":"Avril"},{"5":"Mai"},{"6":"Juin"},{"7":"Juillet"},{"8":"Août"},{"9":"Septembre"},{"10":"Octobre"},{"11":"Novembre"},{"12":"Décembre"}]
+        numberToMonth:[{"1":"Janvier"},{"2":"Février"},{"3":"Mars"},{"4":"Avril"},{"5":"Mai"},{"6":"Juin"},{"7":"Juillet"},{"8":"Août"},{"9":"Septembre"},{"10":"Octobre"},{"11":"Novembre"},{"12":"Décembre"}],
+        skipIndex:0
       }
     },
     props: {
@@ -74,11 +80,13 @@
             }
         },
         getClass(event){
+
             var classes = ""
             if(event.dataid == this.currentEventId){
                 classes = "current"
             }
-            classes += " style"+this.textStyle
+            var index = this.myData.findIndex(x => x.dataid === event.dataid)
+            classes += " style"+this.myData[index].color_theme
             return classes
         },
         getPastLeft(index){
@@ -98,17 +106,17 @@
 
         getScrollerLeft(){
             var index = this.reverseOrderEvents.findIndex(x => x.dataid === this.currentEventId)
+            index = index + (this.skipIndex*5)
+            if(index < 0){ index = 0}
+            if(index > this.reverseOrderEvents.length){ index = this.reverseOrderEvents.length}
+
             return{
-                "marginLeft":(index*124)+"px"
+                "marginLeft":(index*104)+"px"
             }
         },
 
-        callNextEvent(){
-            this.$parent.nextEvent()
-        },
-
-        callPrevEvent(){
-            this.$parent.prevEvent()
+        jumpToEvent(event){
+            this.$parent.jumpToEvent(event)
         },
 
         isLast(){
@@ -147,7 +155,9 @@
     },
   
     watch:{
-       
+        currentEventId:function(){
+            this.skipIndex = 0
+        }
     },
   
     created(){
@@ -165,12 +175,29 @@
     @import "../../css/variables.scss";
 
     #bottomFrise{
-        position: fixed;
+        position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
         height: 118px;
         background-color: $nightBlue;
+        #desktop_frise{
+            display: block;
+        }
+        #mobile_frise{
+            display: none;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            height: 100%;
+            span{
+                color: white;
+                text-align: center;
+                font-family: "Figtree-Bold";
+                font-size: 18px;
+                text-transform: uppercase;
+            }
+        }
         #frise_event_wrapper{
             width: 100%;
             height: 100%;
@@ -192,6 +219,7 @@
                 box-sizing: border-box;
                 transition: all 0.5s ease-in-out;
                 margin-top: -6px;
+                cursor: pointer;
                 &.current{
                     width: 120px;
                     height: 120px;
@@ -200,6 +228,9 @@
                         display: none;
                     }
                     .month{
+                        display: none;
+                    }
+                    .event_tooltip{
                         display: none;
                     }
                     &:after{
@@ -267,6 +298,86 @@
                     width: 100%;
                     font-family:"Figtree-Bold"
                 }
+                .event_tooltip{
+                    position: absolute;
+                    top: -39px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: auto;
+                    background-color: white;
+                    color:$deepBlue;
+                    font-family:"Figtree-Bold";
+                    font-size: 14px;
+                    text-transform: uppercase;
+                    text-align: center;
+                    padding:8px 8px 10px 8px;
+                    border-radius: 4px;
+                    white-space: nowrap;
+                    opacity: 0;
+                    transition: all 0.2s ease-in-out;
+                    &:after{
+                        content: '';
+                        position: absolute;
+                        left: 42%;
+                        top: 100%;
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-top: 10px solid white;
+                        clear: both;
+                    }
+                }
+                &:hover{
+                    &:after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0.5;
+                    }
+                    .event_tooltip{
+                        top: -49px;
+                        opacity: 1;
+                    }
+                    &.current{
+                        .event_tooltip{
+                            opacity: 0;
+                        }
+                    }
+                    &.style1{
+                        &:after{
+                            background-color: $fushia;
+                        }
+                    }
+                    &.style2{
+                        &:after{
+                            background-color: $springGreen;
+                        }
+                    }
+                    &.style3{
+                        &:after{
+                            background-color: $orange;
+                        }
+                    }
+                    &.style4{
+                        &:after{
+                            background-color: $yellow;
+                        }
+                    }
+                    &.style5{
+                        &:after{
+                            background-color: $springGreen;
+                        }
+                    }
+                    &.style6{
+                        &:after{
+                            background-color: $yellow;
+                        }
+                    }
+                }
             }
             .placeholder{
                 width: 80px;
@@ -329,6 +440,7 @@
                 &.disabled{
                     opacity: 0.2;
                     cursor: not-allowed;
+                    pointer-events: none;
                 }
             }
         }
@@ -339,6 +451,16 @@
     }
 
     @media (max-width: 979px) {
+
+        #bottomFrise{
+        height: 68px;
+            #desktop_frise{
+                display: none;
+            }
+            #mobile_frise{
+                display: flex;
+            }
+        }
           
     }
 

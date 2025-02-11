@@ -1,11 +1,11 @@
 <template>
-    <div id="frisepage" :class="getPageStyle()" v-if="myData">
-      <div class="nav_btn nav_btn_prev" :class="(isFirst())?'disabled':''" @click="prevEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
+    <div id="frisepage" :class="getPageStyle(eventData)" v-if="myData">
+      <div class="nav_btn nav_btn_prev" :class="(isFirst())?'disabled':''" @click="jumpToEvent(myData[myData.indexOf(eventData) - 1])"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
       <div id="event_container" :class="{'prev_animation': prevAnimation, 'next_animation': nextAnimation, 'is_hidden_prev': isHiddenPrev, 'is_hidden_next': isHiddenNext}">
-        <div id="event_date" :class="getTextStyle()">{{ eventData.datelabel }}</div>
+        <div id="event_date" :class="getTextStyle(eventData)">{{ eventData.datelabel }}</div>
         <div id="event_image_container">
             <div id="event_image" :style="{ backgroundImage: 'url(' + require('@/assets/img/event/'+eventData.id+'.png') + ')' }"></div>
-            <div id="event_title" :class="getTextStyle()">
+            <div id="event_title" :class="getTextStyle(eventData)">
                 <div v-for="(part, index) in eventData.titre.match(getRegex())" :key="index">
                 <span v-html="part.trim()"></span><br>
                 </div>
@@ -30,7 +30,7 @@
             </div>
         </div>
       </div>
-      <div class="nav_btn nav_btn_next" :class="(isLast())?'disabled':''" @click="nextEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
+      <div class="nav_btn nav_btn_next" :class="(isLast())?'disabled':''" @click="jumpToEvent(myData[myData.indexOf(eventData) + 1])"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
       <bottomFrise></bottomFrise>
     </div>
   </template>
@@ -49,9 +49,7 @@
         prevAnimation:false,
         nextAnimation:false,
         isHiddenPrev:false,
-        isHiddenNext:false,
-        pageStyle:1,
-        textStyle:1
+        isHiddenNext:false
       }
     },
     props: {
@@ -81,41 +79,44 @@
                 window.location.hash = lastEvent.dataid
             }
         },
-        prevEvent(){
+        prevEvent(eventid){
             var self = this;
-            if(this.myData[this.myData.indexOf(this.eventData) - 1]){
-                this.prevAnimation = true;
-                this.pageStyle--
+            this.prevAnimation = true;
+            setTimeout(() => {
+                this.$store.commit('setCurrentEventId',eventid)
+                window.location.hash = self.currentEventId
+                self.isHiddenPrev = true;
                 setTimeout(() => {
-                    this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) - 1].dataid)
-                    window.location.hash = self.currentEventId
-                    self.isHiddenPrev = true;
-                    self.textStyle--
-                    setTimeout(() => {
-                        self.isHiddenPrev = false;
-                        self.prevAnimation = false;
-                    }, 20);
-                }, 750);
-                
+                    self.isHiddenPrev = false;
+                    self.prevAnimation = false;
+                }, 20);
+            }, 750);
+        },
+        
+        nextEvent(eventid){
+            var self = this;
+            this.nextAnimation = true;
+            setTimeout(() => {
+                this.$store.commit('setCurrentEventId',eventid)
+                window.location.hash = self.currentEventId
+                self.isHiddenNext = true;
+                setTimeout(() => {
+                    self.isHiddenNext = false;
+                    self.nextAnimation = false;
+                }, 20);
+            }, 750);
+        },
+        
+        jumpToEvent(event){
+            if(event){
+                if(this.myData.indexOf(this.eventData) > this.myData.indexOf(event)){
+                    this.prevEvent(event.dataid)
+                }else{
+                    this.nextEvent(event.dataid)
+                }
             }
         },
-        nextEvent(){
-            var self = this;
-            if(this.myData[this.myData.indexOf(this.eventData) + 1]){
-                this.nextAnimation = true;
-                this.pageStyle++
-                setTimeout(() => {
-                    this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) + 1].dataid)
-                    window.location.hash = self.currentEventId
-                    self.isHiddenNext = true;
-                    self.textStyle++
-                    setTimeout(() => {
-                        self.isHiddenNext = false;
-                        self.nextAnimation = false;
-                    }, 20);
-                }, 750);
-            }
-        },
+        
         getIcon(type){
             if(type=='site'){
                 return require('@/assets/img/link-icon.svg')
@@ -147,22 +148,11 @@
                 return /.{1,35}(?:\s|$)/g
             }
         },
-        getPageStyle(){
-            
-            if(this.pageStyle > 6){
-                this.pageStyle = 1
-            }else if(this.pageStyle < 1){
-                this.pageStyle = 6
-            }
-            return "style"+this.pageStyle
+        getPageStyle(event){
+            return "style"+event.color_theme
         },
-        getTextStyle(){
-            if(this.textStyle > 6){
-                this.textStyle = 1
-            }else if(this.textStyle < 1){
-                this.textStyle = 6
-            }
-            return "style"+this.textStyle
+        getTextStyle(event){
+            return "style"+event.color_theme
         }
     },
   
@@ -378,7 +368,7 @@
         position: absolute;
         width: 68px;
         height: 68px;
-        background-color:$nightBlue;
+        background-color:$deepBlue;
         top:50%;
         transform: translateY(-50%);
         cursor: pointer;
@@ -502,7 +492,17 @@
                         }
                     }
                 }
-                
+            }
+            .nav_btn{
+                top:auto;
+                bottom:0;
+                transform: translateY(0);
+                &:hover{
+                    background-color:$deepBlue;
+                    svg *{
+                        fill: white;
+                    }
+                }
             }
         }
     }
