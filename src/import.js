@@ -59,7 +59,28 @@ export const getData = async function (store) {
             allItems.push(itemObj)
         });
 
-        console.log(allItems)
+        allItems.sort((a, b) => {
+          return parseInt(b.annee) - parseInt(a.annee);
+        });
+
+        allItems.sort((a, b) => {
+          if (b.annee === a.annee) {
+            return parseInt(b.mois) - parseInt(a.mois);
+          }
+          return parseInt(b.annee) - parseInt(a.annee);
+        });
+
+        allItems.sort((a, b) => {
+          if (b.annee === a.annee && b.mois === a.mois) {
+            return parseInt(b.jour) - parseInt(a.jour);
+          }
+          if (b.annee === a.annee) {
+            return parseInt(b.mois) - parseInt(a.mois);
+          }
+          return parseInt(b.annee) - parseInt(a.annee);
+        });
+
+        allItems.reverse();
 
         store.commit('initializeData',allItems)
         store.commit("endImport",true)

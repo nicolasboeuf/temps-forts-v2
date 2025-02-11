@@ -1,11 +1,11 @@
 <template>
-    <div id="frisepage" v-if="myData">
+    <div id="frisepage" :class="getPageStyle()" v-if="myData">
       <div class="nav_btn nav_btn_prev" :class="(isFirst())?'disabled':''" @click="prevEvent"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
       <div id="event_container" :class="{'prev_animation': prevAnimation, 'next_animation': nextAnimation, 'is_hidden_prev': isHiddenPrev, 'is_hidden_next': isHiddenNext}">
-        <div id="event_date">{{ eventData.datelabel }}</div>
+        <div id="event_date" :class="getTextStyle()">{{ eventData.datelabel }}</div>
         <div id="event_image_container">
             <div id="event_image" :style="{ backgroundImage: 'url(' + require('@/assets/img/event/'+eventData.id+'.png') + ')' }"></div>
-            <div id="event_title">
+            <div id="event_title" :class="getTextStyle()">
                 <div v-for="(part, index) in eventData.titre.match(getRegex())" :key="index">
                 <span v-html="part.trim()"></span><br>
                 </div>
@@ -49,7 +49,9 @@
         prevAnimation:false,
         nextAnimation:false,
         isHiddenPrev:false,
-        isHiddenNext:false
+        isHiddenNext:false,
+        pageStyle:1,
+        textStyle:1
       }
     },
     props: {
@@ -83,10 +85,12 @@
             var self = this;
             if(this.myData[this.myData.indexOf(this.eventData) - 1]){
                 this.prevAnimation = true;
+                this.pageStyle--
                 setTimeout(() => {
                     this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) - 1].dataid)
                     window.location.hash = self.currentEventId
                     self.isHiddenPrev = true;
+                    self.textStyle--
                     setTimeout(() => {
                         self.isHiddenPrev = false;
                         self.prevAnimation = false;
@@ -99,10 +103,12 @@
             var self = this;
             if(this.myData[this.myData.indexOf(this.eventData) + 1]){
                 this.nextAnimation = true;
+                this.pageStyle++
                 setTimeout(() => {
                     this.$store.commit('setCurrentEventId',self.myData[self.myData.indexOf(self.eventData) + 1].dataid)
                     window.location.hash = self.currentEventId
                     self.isHiddenNext = true;
+                    self.textStyle++
                     setTimeout(() => {
                         self.isHiddenNext = false;
                         self.nextAnimation = false;
@@ -119,6 +125,8 @@
                 return require('@/assets/img/infographie-icon.svg')
             }else if(type=='pdf'){
                 return require('@/assets/img/document-icon.svg')
+            }else if(type=='son'){
+                return require('@/assets/img/sound-icon.svg')
             }else{
                 return require('@/assets/img/link-icon.svg')
             }
@@ -138,6 +146,23 @@
             }else{
                 return /.{1,35}(?:\s|$)/g
             }
+        },
+        getPageStyle(){
+            
+            if(this.pageStyle > 6){
+                this.pageStyle = 1
+            }else if(this.pageStyle < 1){
+                this.pageStyle = 6
+            }
+            return "style"+this.pageStyle
+        },
+        getTextStyle(){
+            if(this.textStyle > 6){
+                this.textStyle = 1
+            }else if(this.textStyle < 1){
+                this.textStyle = 6
+            }
+            return "style"+this.textStyle
         }
     },
   
@@ -164,12 +189,30 @@
     @import "../../css/overload-fonts.css";
     @import "../../css/variables.scss";
     #frisepage{
-      background-color:$mintBlue;
       position: absolute;
       top: 100px;
       left: 0;
       right: 0;
       bottom: 0;
+      transition: background-color 0.5s ease-in-out;
+      &.style1{
+        background-color:$mintBlue;
+      }
+      &.style2{
+        background-color:$orange;
+      }
+      &.style3{
+        background-color:$springGreen;
+      }
+      &.style4{
+        background-color:$violet;
+      }
+      &.style5{
+        background-color:$paleFushia;
+      }
+      &.style6{
+        background-color:$tropicalBlue;
+      }
       #event_container{
         width: 100%;
         position: relative;
@@ -209,13 +252,35 @@
         #event_date{
           font-family: Figtree-ExtraBold;
           font-size: 24px;
-          color: $springGreen;
-          background-color:$fushia;
           display: inline-block;
           padding:6px 12px;
           left:50%;
           transform: translateX(-50%);
           position: relative;
+          &.style1{
+            color: $springGreen;
+            background-color:$fushia;
+          }
+          &.style2{
+            color: $springGreen;
+            background-color:$violet;
+          }
+          &.style3{
+            color: $orange;
+            background-color:$violet;
+          }
+          &.style4{
+            color: $violet;
+            background-color:$yellow;
+          }
+          &.style5{
+            color: $nightBlue;
+            background-color:$springGreen;
+          }
+          &.style6{
+            color: $violet;
+            background-color:$yellow;
+          }
         }
         #event_image_container{
             position: relative;
@@ -234,17 +299,51 @@
             #event_title{
                 font-family: Figtree-ExtraBold;
                 font-size: 24px;
-                color: $springGreen;
                 position: absolute;
                 display: inline-block;
                 left:50%;
                 margin-left:208px;
                 transition: margin-left 0.9s ease-in-out;
                 span{
-                    background-color:$fushia;
                     padding:6px 12px;
                     display: inline-block;
                     margin-bottom: 8px;
+                }
+                &.style1{
+                    span{
+                        color: $springGreen;
+                        background-color:$fushia;
+                    }
+                }
+                &.style2{
+                    span{
+                        color: $springGreen;
+                        background-color:$violet;
+                    }
+                }
+                &.style3{
+                    span{
+                        color: $orange;
+                        background-color:$violet;
+                    }
+                }
+                &.style4{
+                    span{
+                        color: $violet;
+                        background-color:$yellow;
+                    }
+                }
+                &.style5{
+                    span{
+                        color: $nightBlue;
+                        background-color:$springGreen;
+                    }
+                }
+                &.style6{
+                    span{
+                        color: $violet;
+                        background-color:$yellow;
+                    }
                 }
             }
         }

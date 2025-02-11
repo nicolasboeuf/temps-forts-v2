@@ -5,7 +5,7 @@
         </div>
         <div id="frise_event_wrapper" :style="getScrollerLeft()">
             <div class="placeholder past" v-for="pastIndex in 20" :style="getPastLeft(pastIndex)" :key="pastIndex+'past'"></div>
-            <div class="frise_event" v-for="event,index in reverseOrderEvents" :key="event.id" :style="getStyle(index,event)" :class="{'current':event.dataid == currentEventId}" >
+            <div class="frise_event" v-for="event,index in reverseOrderEvents" :key="event.id" :style="getStyle(index,event)" :class="getClass(event)" >
                 <div class="year">{{getYear(event)}}</div>
                 <div class="month">{{ getMonth(event) }}</div>
             </div>
@@ -46,6 +46,9 @@
       eventData(){
         return this.myData.find(event => event.dataid == this.currentEventId)
       },
+      textStyle(){
+        return this.$parent.textStyle
+      }
     },
     methods: {
 
@@ -70,7 +73,14 @@
                 "backgroundImage": "url(" + require('@/assets/img/event/'+event.id+'.png') + ')'
             }
         },
-
+        getClass(event){
+            var classes = ""
+            if(event.dataid == this.currentEventId){
+                classes = "current"
+            }
+            classes += " style"+this.textStyle
+            return classes
+        },
         getPastLeft(index){
             var prev = this.reverseOrderEvents.length-1
             var left ="-"+(index+prev)*104+"px"
@@ -109,7 +119,13 @@
         },
 
         getYear(event){
-            return event.annee
+            var currentIndex = this.reverseOrderEvents.findIndex(x => x.dataid === event.dataid)
+            var previousEvent =  currentIndex+1 < this.reverseOrderEvents.length ? this.reverseOrderEvents[currentIndex + 1] : null
+            if(previousEvent && event.annee == previousEvent.annee){
+                return ""
+            }else{
+                return event.annee
+            }
         },
 
         getMonth(event){
@@ -180,13 +196,64 @@
                     width: 120px;
                     height: 120px;
                     margin-top:-25px;
+                    .year{
+                        display: none;
+                    }
+                    .month{
+                        display: none;
+                    }
+                    &:after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0.5;
+                    }
+                }
+                &.style1{
+                    &:after{
+                        background-color: $fushia;
+                    }
+                }
+                &.style2{
+                    &:after{
+                        background-color: $springGreen;
+                    }
+                }
+                &.style3{
+                    &:after{
+                        background-color: $orange;
+                    }
+                }
+                &.style4{
+                    &:after{
+                        background-color: $yellow;
+                    }
+                }
+                &.style5{
+                    &:after{
+                        background-color: $springGreen;
+                    }
+                }
+                &.style6{
+                    &:after{
+                        background-color: $yellow;
+                    }
                 }
                 .year{
                     font-size: 14px;
                     color: white;
                     text-transform: uppercase;
-                    opacity: 0.5;
-                    display: none;
+                    position: absolute;
+                    text-align: left;
+                    width: auto;
+                    left:-30px;
+                    top:10px;
+                    font-family:"Figtree-Bold";
+                    transform: rotate(-90deg);
+                    
                 }
                 .month{
                     font-size: 14px;
