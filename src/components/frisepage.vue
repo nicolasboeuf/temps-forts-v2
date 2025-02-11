@@ -90,7 +90,7 @@
                     self.isHiddenPrev = false;
                     self.prevAnimation = false;
                 }, 20);
-            }, 750);
+            }, 450);
         },
         
         nextEvent(eventid){
@@ -104,7 +104,7 @@
                     self.isHiddenNext = false;
                     self.nextAnimation = false;
                 }, 20);
-            }, 750);
+            }, 450);
         },
         
         jumpToEvent(event){
@@ -208,7 +208,7 @@
         position: relative;
         top:55px;
         transform: translateX(0);
-        transition: transform 1.1s ease-in-out;
+        transition: transform 0.8s ease-in-out;
         &.is_hidden_prev{
             transition: none;
             transform: translateX(-100%)!important;
