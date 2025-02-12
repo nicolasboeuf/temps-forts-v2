@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="appear||appState == 'frise'?'appear':''">
     <appHeader :appState="appState"></appHeader>
     <homepage v-if="appState == 'homepage' " @changeAppState="changeAppState"></homepage>
     <frisepage v-if="appState == 'frise' "></frisepage>
@@ -24,7 +24,8 @@ export default {
 
   data(){
     return {
-      appState:"homepage"
+      appState:"homepage",
+      appear:false
     }
   },
 
@@ -51,7 +52,14 @@ export default {
     if(window.location.pathname.includes('/frise')){
       this.changeAppState('frise')
     }
-  }
+  },
+
+  mounted:function(){
+    var self = this
+    setTimeout(function(){
+      self.appear = true  
+    },500)
+  },
 }
 </script>
 
@@ -70,6 +78,28 @@ export default {
     right: 0;
     bottom: 0;
     overflow:hidden;
+    #appHeader{
+      top:-120px!important;
+      opacity: 0!important;
+    }
+    #homepage{
+      #homepageContainer{
+        top:0px!important;
+        opacity: 0!important;
+      }
+    }
+    &.appear{
+      #appHeader{
+        top:0!important;
+        opacity: 1!important;
+      }
+      #homepage{
+        #homepageContainer{
+          top:190px!important;
+          opacity: 1!important;
+        }
+      }
+    }
   }
 
   @media (max-width: 979px) {

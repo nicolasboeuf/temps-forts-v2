@@ -58,7 +58,8 @@
         nextAnimation:false,
         isHiddenPrev:false,
         isHiddenNext:false,
-        menuOpen:false
+        menuOpen:false,
+        appear:false
       }
     },
     props: {
@@ -158,10 +159,18 @@
             }
         },
         getPageStyle(event){
-            return "style"+event.color_theme
+            if(this.appear){
+                return "appear style"+event.color_theme
+            }else{
+                return "style"+event.color_theme
+            }
         },
         getTextStyle(event){
-            return "style"+event.color_theme
+            if(this.appear){
+                return "appear style"+event.color_theme
+            }else{
+                return "style"+event.color_theme
+            }
         },
         toggleMenu(){
             this.menuOpen = !this.menuOpen
@@ -179,6 +188,13 @@
   
     created(){
       if(this.myData){this.setCurrentEventId()}
+    },
+
+    mounted:function(){
+      var self = this
+      setTimeout(function(){
+        self.appear = true  
+      },500)
     }
   
   }
@@ -215,6 +231,27 @@
       &.style6{
         background-color:$tropicalBlue;
       }
+      &.appear{
+        #event_container{
+            transform: translateX(0);
+            #event_image_container{
+                #event_title{
+                    margin-left:208px;
+                }
+                #event_buttons{
+                    margin-left:-208px;
+                }
+            }
+        }
+        .nav_btn{
+            &.nav_btn_prev{
+                left:0;
+            }
+            &.nav_btn_next{
+                right:0;
+            }
+        }
+      }
       #menu_btn{
         position: absolute;
         top: 10px;
@@ -250,7 +287,7 @@
         width: 100%;
         position: relative;
         top:55px;
-        transform: translateX(0);
+        transform: translateX(-100%);
         transition: transform 0.8s ease-in-out;
         &.is_hidden_prev{
             transition: none;
@@ -335,7 +372,7 @@
                 position: absolute;
                 display: inline-block;
                 left:50%;
-                margin-left:208px;
+                margin-left:0px;
                 transition: margin-left 0.9s ease-in-out;
                 span{
                     padding:6px 12px;
@@ -384,7 +421,7 @@
             position:absolute;
             bottom:-285px;
             left:50%;
-            margin-left:-208px;
+            margin-left:0px;
             transform: translateX(-100%); 
             transition: margin-left 0.9s ease-in-out;
             .event_button{
@@ -416,6 +453,7 @@
         transform: translateY(-50%);
         cursor: pointer;
         z-index: 100;
+        transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
         &.disabled{
             opacity: 0.2;
             pointer-events: none;
@@ -432,13 +470,13 @@
             left:50%;
         }
         &.nav_btn_prev{
-            left:0;
+            left:-68px;
             svg{
                 transform: translate(-50%,-50%);
             }   
         }
         &.nav_btn_next{
-            right:0;
+            right:-68px;
             svg{
                 transform: translate(-50%,-50%) rotate(180deg);
             }
@@ -448,12 +486,24 @@
 
     @media (max-width: 1149px) {
         #frisepage{
+            &.appear{
+                #event_container{
+                    #event_image_container{
+                        #event_title{
+                            margin-left:-200px;
+                        }
+                        #event_buttons{
+                            margin-left:-200px;
+                        }
+                    }
+                }
+            }
             #event_container{
                 top:32px;
                 #event_image_container{
                     #event_title{
                         left:50%;
-                        margin-left:-200px;
+                        margin-left:0;
                         top:288px;
                         position: relative;
                     }
@@ -462,16 +512,13 @@
                         bottom:auto;
                         top:288px;
                         left:50%;
-                        margin-left:-200px;
+                        margin-left:0;
                         transform: translateX(0);
                         width: 348px;
                         display: flex;
                         flex-direction: row;
                         flex-wrap: wrap;
                         justify-content: space-between;
-                        .event_button{
-                            
-                        }
                     }
                 }
                 
@@ -483,6 +530,21 @@
     @media (max-width: 979px) {
         #frisepage{
             top:60px;
+            &.appear{
+                #event_container{
+                    #event_image_container{
+                        #event_title{
+                            margin-left:-170px;
+                        }
+                        #event_buttons{
+                            margin-left:-170px;
+                        }
+                    }
+                }
+                .nav_btn{
+                    bottom:0px;
+                }
+            }
             #menu_btn{
                 top:-50px;
                 &:hover{
@@ -497,10 +559,10 @@
                 &.prev_animation{
                     #event_image_container{
                         #event_title{
-                            margin-left:-170px;
+                            margin-left:0px;
                         }
                         #event_buttons{
-                            margin-left:-170px;
+                            margin-left:0px;
                         }
                     }
                 }
@@ -525,7 +587,6 @@
                         margin-left:-170px;
                         top:244px;
                         position: relative;
-                        
                     }
                     #event_buttons{
                         position:relative;
@@ -547,8 +608,15 @@
             }
             .nav_btn{
                 top:auto;
-                bottom:0;
+                bottom:-68px;
                 transform: translateY(0);
+                transition: bottom 0.5s ease-in-out;
+                &.nav_btn_prev{
+                    left:0px;
+                }
+                &.nav_btn_next{
+                    right:-0px;
+                }
                 &:hover{
                     background-color:$deepBlue;
                     svg *{

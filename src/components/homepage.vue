@@ -26,7 +26,12 @@ export default {
   methods: {
     changeAppState(state){
       this.$emit('changeAppState', state)
-      window.history.pushState({}, '', '/frise')
+      if (window.location.pathname !== '/') {
+        const baseUrl = window.location.pathname.split('/')[1]
+        window.history.pushState({}, '', `/${baseUrl}/frise`) 
+      } else {
+        window.history.pushState({}, '', '/frise')
+      }
     }
   },
 
@@ -59,6 +64,7 @@ export default {
       left: 50%;
       transform: translate(-50%, 0);
       display: block;
+      transition: all 0.8s ease-in-out;
       #homepageTitle{
         font-family: Montserrat-ExtraBold;
         font-size: 45px;

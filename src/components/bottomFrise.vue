@@ -1,5 +1,5 @@
 <template>
-    <div id="bottomFrise" v-if="myData">
+    <div id="bottomFrise" v-if="myData" :class="appear?'appear':''">
         <div id="desktop_frise">
             <div class="frise_control control_left">
                 <div class="frise_control_btn" @click="skipIndex++" :class="(isFirst())?'disabled':''"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><mask id="mask0_202_3653" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="10" width="24" height="24"><rect width="24" height="24" transform="matrix(-1 0 0 1 37 10)" fill="#D9D9D9"/></mask><g mask="url(#mask0_202_3653)"><path d="M21.0001 31.6537L30.6538 21.9999L21.0001 12.3462L19.5808 13.7654L27.8156 21.9999L19.5808 30.2344L21.0001 31.6537Z" fill="#005DA4"/></g></svg></div>
@@ -31,7 +31,8 @@
     data(){
       return {
         numberToMonth:[{"1":"Janvier"},{"2":"Février"},{"3":"Mars"},{"4":"Avril"},{"5":"Mai"},{"6":"Juin"},{"7":"Juillet"},{"8":"Août"},{"9":"Septembre"},{"10":"Octobre"},{"11":"Novembre"},{"12":"Décembre"}],
-        skipIndex:0
+        skipIndex:0,
+        appear:false
       }
     },
     props: {
@@ -162,6 +163,13 @@
   
     created(){
      
+    },
+
+    mounted:function(){
+      var self = this
+      setTimeout(function(){
+        self.appear = true  
+      },500)
     }
   
   }
@@ -176,11 +184,15 @@
 
     #bottomFrise{
         position: absolute;
-        bottom: 0;
+        bottom: -145px;
         left: 0;
         width: 100%;
         height: 118px;
         background-color: $nightBlue;
+        transition: bottom 0.5s ease-in-out;
+        &.appear{
+            bottom: 0;
+        }
         #desktop_frise{
             display: block;
         }
@@ -453,6 +465,7 @@
     @media (max-width: 979px) {
 
         #bottomFrise{
+        bottom: -68px;
         height: 68px;
             #desktop_frise{
                 display: none;

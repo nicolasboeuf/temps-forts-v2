@@ -55,6 +55,7 @@
         position: relative;
         top:0;
         text-align: center;
+        transition: top 0.8s ease-in-out, opacity 0.8s ease-in-out;
         img{
             position: absolute;
             left:30px;
