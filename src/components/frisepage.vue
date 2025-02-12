@@ -1,5 +1,11 @@
 <template>
     <div id="frisepage" :class="getPageStyle(eventData)" v-if="myData">
+      <menupage :menuOpen="menuOpen"></menupage>
+      <div id="menu_btn" @click="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
       <div class="nav_btn nav_btn_prev" :class="(isFirst())?'disabled':''" @click="jumpToEvent(myData[myData.indexOf(eventData) - 1])"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
       <div id="event_container" :class="{'prev_animation': prevAnimation, 'next_animation': nextAnimation, 'is_hidden_prev': isHiddenPrev, 'is_hidden_next': isHiddenNext}">
         <div id="event_date" :class="getTextStyle(eventData)">{{ eventData.datelabel }}</div>
@@ -38,18 +44,21 @@
   <script>
   import store from '@/store'
   import bottomFrise from './bottomFrise.vue'
+  import menupage from './menupage.vue'
 
   export default {
     name: 'Frisepage',
     components: {
-      bottomFrise
+      bottomFrise,
+      menupage
     },
     data(){
       return {
         prevAnimation:false,
         nextAnimation:false,
         isHiddenPrev:false,
-        isHiddenNext:false
+        isHiddenNext:false,
+        menuOpen:false
       }
     },
     props: {
@@ -145,7 +154,7 @@
             }else if(window.innerWidth > 979){
                 return /.{1,40}(?:\s|$)/g
             }else{
-                return /.{1,35}(?:\s|$)/g
+                return /.{1,30}(?:\s|$)/g
             }
         },
         getPageStyle(event){
@@ -153,6 +162,9 @@
         },
         getTextStyle(event){
             return "style"+event.color_theme
+        },
+        toggleMenu(){
+            this.menuOpen = !this.menuOpen
         }
     },
   
@@ -202,6 +214,37 @@
       }
       &.style6{
         background-color:$tropicalBlue;
+      }
+      #menu_btn{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: white;
+        cursor: pointer;
+        z-index: 100;
+        div{
+            width: 30px;
+            height: 2px;
+            background-color: $deepBlue;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            &:nth-child(1){
+                margin-top: -7px;
+            }
+            &:nth-child(2){
+                margin-top: 7px;
+            }
+        }
+        &:hover{
+            background-color: $deepBlue;
+            div{
+                background-color: white;
+            }
+        }
       }
       #event_container{
         width: 100%;
@@ -372,7 +415,7 @@
         top:50%;
         transform: translateY(-50%);
         cursor: pointer;
-        z-index: 1000;
+        z-index: 100;
         &.disabled{
             opacity: 0.2;
             pointer-events: none;
@@ -440,6 +483,15 @@
     @media (max-width: 979px) {
         #frisepage{
             top:60px;
+            #menu_btn{
+                top:-50px;
+                &:hover{
+                    background-color: white;
+                    div{
+                        background-color: $deepBlue;
+                    }
+                }
+            }
             #event_container{
                 top:12px;
                 &.prev_animation{

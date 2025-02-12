@@ -395,7 +395,7 @@
             width: 60px;
             height: 118px;
             top:0;
-            z-index: 1000;
+            z-index: 100;
             background-color:$nightBlue;
             &.control_right{
                 right:0;

@@ -1,7 +1,7 @@
 <template>
     <div id="appHeader" :class="{'homepage':appState == 'homepage'}">
       <div>
-        <img src="@/assets/logo-ap.png" alt="logo">
+        <a href="https://www.assurance-prevention.fr/" target="_blank"><img src="@/assets/logo-ap.png" alt="logo"></a>
         <h1 @click="callChangeAppState('homepage')">Nos temps forts</h1>
       </div>
     </div>
