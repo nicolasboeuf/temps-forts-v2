@@ -56,7 +56,9 @@ export const getData = async function (store) {
               bouton4_texte:item.gsx$bouton4texte.$t,
               bouton4_type:item.gsx$bouton4type.$t
             }
-            allItems.push(itemObj)
+            if(parseInt(itemObj.annee) >= 2022){
+              allItems.push(itemObj)
+            }
         });
 
         allItems.sort((a, b) => {

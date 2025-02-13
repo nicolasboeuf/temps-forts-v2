@@ -226,8 +226,8 @@
                 top: 50%;
                 transform: translate(-50%, -50%);
                 background-size: cover;
+                background-position: center center;
                 background-repeat: no-repeat;
-                border: 1px solid white;
                 box-sizing: border-box;
                 transition: all 0.5s ease-in-out;
                 margin-top: -6px;
