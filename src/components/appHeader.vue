@@ -2,7 +2,7 @@
     <div id="appHeader" :class="{'homepage':appState == 'homepage'}">
       <div>
         <a href="https://www.assurance-prevention.fr/" target="_blank"><img src="@/assets/logo-ap.png" alt="logo"></a>
-        <h1 @click="callChangeAppState('homepage')">Nos temps forts</h1>
+        <h1 @click="callChangeAppState('homepage')">Nos Temps Forts</h1>
       </div>
     </div>
   </template>

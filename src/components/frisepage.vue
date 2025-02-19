@@ -1,5 +1,5 @@
 <template>
-    <div id="frisepage" :class="getPageStyle(eventData)" v-if="myData">
+    <div id="frisepage" :class="getPageStyle(eventData)" v-if="myData" @click="handleClickOutside">
       <menupage :menuOpen="menuOpen"></menupage>
       <div id="menu_btn" @click="toggleMenu()">
         <div></div>
@@ -8,28 +8,26 @@
       </div>
       <div class="nav_btn nav_btn_prev" :class="(isFirst())?'disabled':''" @click="jumpToEvent(myData[myData.indexOf(eventData) - 1])"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><mask id="mask0_33_377" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40"><rect width="40" height="40" fill="#D9D9D9"/></mask><g mask="url(#mask0_33_377)"><path d="M11.4933 21.0471L21.4829 31.0254L20 32.5L7.5 20L20 7.5L21.4829 8.97458L11.4933 18.9529H32.5V21.0471H11.4933Z" fill="white"/></g></svg></div>
       <div id="event_container" :class="{'prev_animation': prevAnimation, 'next_animation': nextAnimation, 'is_hidden_prev': isHiddenPrev, 'is_hidden_next': isHiddenNext}">
-        <div id="event_date" :class="getTextStyle(eventData)">{{ eventData.datelabel }}</div>
+        <div id="event_date" :class="getTextStyle(eventData)">{{ eventData.datelabel.toUpperCase() }}</div>
         <div id="event_image_container">
             <div id="event_image" :style="{ backgroundImage: 'url(' + require('@/assets/img/event/'+eventData.id+'.png') + ')' }"></div>
             <div id="event_title" :class="getTextStyle(eventData)">
-                <div v-for="(part, index) in eventData.titre.match(getRegex())" :key="index">
-                <span v-html="part.trim()"></span><br>
-                </div>
+               <div><span v-html="eventData.titre"></span></div>
             </div>
             <div id="event_buttons">
-                <a class="event_button" v-if="eventData.bouton1_texte" :href="eventData.bouton1_url">
+                <a class="event_button" v-if="eventData.bouton1_texte" :href="eventData.bouton1_url" target="_self">
                     <img :src="getIcon(eventData.bouton1_type)">
                     {{ eventData.bouton1_texte }} 
                 </a>
-                <a class="event_button" v-if="eventData.bouton2_texte" :href="eventData.bouton2_url">
+                <a class="event_button" v-if="eventData.bouton2_texte" :href="eventData.bouton2_url" target="_self">
                     <img :src="getIcon(eventData.bouton2_type)">
                     {{ eventData.bouton2_texte }} 
                 </a>
-                <a class="event_button" v-if="eventData.bouton3_texte" :href="eventData.bouton3_url">
+                <a class="event_button" v-if="eventData.bouton3_texte" :href="eventData.bouton3_url" target="_self">
                     <img :src="getIcon(eventData.bouton3_type)">
                     {{ eventData.bouton3_texte }} 
                 </a>
-                <a class="event_button" v-if="eventData.bouton4_texte" :href="eventData.bouton4_url">
+                <a class="event_button" v-if="eventData.bouton4_texte" :href="eventData.bouton4_url" target="_self">
                     <img :src="getIcon(eventData.bouton4_type)">
                     {{ eventData.bouton4_texte }} 
                 </a>
@@ -79,7 +77,17 @@
       }
     },
     methods: {
-
+        handleClickOutside(event) {
+            const menuContainer = document.getElementById('menu_container');
+            const menuBtn = document.getElementById('menu_btn');
+            // Don't close if clicking the menu button or inside menu container
+            if (this.menuOpen && 
+                menuContainer && 
+                !menuContainer.contains(event.target) && 
+                !menuBtn.contains(event.target)) {
+                this.toggleMenu();
+            }
+        },
         setCurrentEventId(){
             if(window.location.hash) {
                 this.$store.commit('setCurrentEventId',window.location.hash.substring(1))
@@ -148,15 +156,6 @@
         },
         isFirst(){
             return this.myData.indexOf(this.eventData) == 0
-        },
-        getRegex(){
-            if(window.innerWidth > 1149){
-                return /.{1,25}(?:\s|$)/g
-            }else if(window.innerWidth > 979){
-                return /.{1,40}(?:\s|$)/g
-            }else{
-                return /.{1,30}(?:\s|$)/g
-            }
         },
         getPageStyle(event){
             if(this.appear){
@@ -261,6 +260,7 @@
         background-color: white;
         cursor: pointer;
         z-index: 100;
+        transition: background-color 0.2s ease-in-out;
         div{
             width: 30px;
             height: 2px;
@@ -269,6 +269,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%,-50%);
+            transition: background-color 0.2s ease-in-out;
             &:nth-child(1){
                 margin-top: -7px;
             }
@@ -365,19 +366,25 @@
                 background-repeat: no-repeat;
                 background-position: center;
                 position: absolute;
+                border-radius: 3px;
+                border: 2px solid rgba(0, 0, 0, 0.08);
+                box-sizing: border-box;
             }
             #event_title{
                 font-family: Figtree-ExtraBold;
                 font-size: 24px;
                 position: absolute;
-                display: inline-block;
+                display: block;
                 left:50%;
                 margin-left:0px;
                 transition: margin-left 0.9s ease-in-out;
+                max-width: 320px;
                 span{
                     padding:6px 12px;
-                    display: inline-block;
-                    margin-bottom: 8px;
+                    display: inline;
+                    margin-bottom: 4px;
+                    box-decoration-break: clone;
+                    line-height: 45px;
                 }
                 &.style1{
                     span{
@@ -453,7 +460,7 @@
         transform: translateY(-50%);
         cursor: pointer;
         z-index: 100;
-        transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
+        transition: left 0.5s ease-in-out, right 0.5s ease-in-out, background-color 0.2s ease-in-out;
         &.disabled{
             opacity: 0.2;
             pointer-events: none;
@@ -468,6 +475,9 @@
             position: absolute;
             top:50%;
             left:50%;
+            *{
+                transition: fill 0.2s ease-in-out;
+            }
         }
         &.nav_btn_prev{
             left:-68px;
@@ -488,8 +498,13 @@
         #frisepage{
             &.appear{
                 #event_container{
+                    #event_date{
+                        font-size:18px;
+                        padding:3px 8px;
+                    }
                     #event_image_container{
                         #event_title{
+                            max-width: 400px;
                             margin-left:-200px;
                         }
                         #event_buttons{
@@ -534,6 +549,7 @@
                 #event_container{
                     #event_image_container{
                         #event_title{
+                            max-width: 340px;
                             margin-left:-170px;
                         }
                         #event_buttons{
@@ -555,10 +571,13 @@
                 }
             }
             #event_container{
-                top:12px;
+                top:0px;
+                overflow: scroll;
+                height: 100%;
                 &.prev_animation{
                     #event_image_container{
                         #event_title{
+                            max-width: 320px;
                             margin-left:0px;
                         }
                         #event_buttons{
@@ -576,22 +595,28 @@
                         }
                     }
                 }
+                #event_date{
+                    margin-top:8px;
+                }
                 #event_image_container{
-                    top:8px;
+                    top:auto;
+                    margin-top:8px;
+                    padding-bottom: 120px;
                     #event_image{
                         width: 344px;
                         height: 229px;
+                        position: relative;
                     }
                     #event_title{
                         left:50%;
                         margin-left:-170px;
-                        top:244px;
+                        top:20px;
                         position: relative;
                     }
                     #event_buttons{
                         position:relative;
                         bottom:auto;
-                        top:248px;
+                        top:40px;
                         left:50%;
                         margin-left:-170px;
                         transform: translateX(0);

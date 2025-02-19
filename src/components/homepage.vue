@@ -1,7 +1,7 @@
 <template>
   <div id="homepage">
     <div id="homepageContainer">
-      <div id="homepageTitle"><span>Découvrez</span><br><span>nos temps forts</span></div>
+      <div id="homepageTitle"><span>Découvrez<br>nos Temps Forts</span></div>
       <div id="homepageButton" @click="changeAppState('frise')">Explorer</div>
     </div>
   </div>
@@ -65,24 +65,26 @@ export default {
       transform: translate(-50%, 0);
       display: block;
       transition: all 0.8s ease-in-out;
+      transition-delay: 0.3s;
       #homepageTitle{
         font-family: Montserrat-ExtraBold;
         font-size: 45px;
         color: white;
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 16px;
         position: relative;
         span{
           background-color: $tropicalBlue;
           padding: 8px 16px;
-          margin-bottom: 8px;
-          display: inline-block;
+          display: inline;
+          box-decoration-break: clone;
+          line-height: 80px;
         }
       }
       #homepageButton{
         font-family:Figtree-Bold;
         font-size:18px;
-        color:black;
+        color:#2d2b2c;
         padding: 13px 40px 15px 40px;
         background-color: $yellow;
         display: inline-block;
@@ -95,6 +97,4 @@ export default {
       }
     }
   }
-
-
 </style>

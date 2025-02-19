@@ -1,10 +1,10 @@
 <template>
     <div id="menupage" :class="{'open':menuOpen}">
         <div id="menu_container">
-            <div id="menu_wrapper">
+            <div id="menu_wrapper" @click.self="handleContainerClick">
                 <div id="menu_close" @click="toggleMenu()"></div>
                 <div id="menu_title">
-                    <span>Nos temps forts</span>
+                    <span>Nos Temps Forts</span>
                 </div>
                 <div id="menu_month_selector">
                     <div id="menu_month_selector_title" :class="{'open':openMonthSelector}" @click="openMonthSelector = !openMonthSelector">Parcourir <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><mask id="mask0_218_4203" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#D9D9D9"/></mask><g mask="url(#mask0_218_4203)"><path d="M12 15L7 10H17L12 15Z" fill="#483D8B"/></g></svg></div>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="menu_link_container">
                     <div class="menu_link_title">NOTRE NEWSLETTER</div>
-                    <a href="https://www.assurance-prevention.fr/" target="_blank"><div class="menu_link_btn">S'abonner</div></a>
+                    <a href="https://www.assurance-prevention.fr/" target="_blank"><div class="menu_link_btn">S’abonner</div></a>
                 </div>
                 <div class="share_container">
                     <div class="share_title">Partager</div>
@@ -101,6 +101,9 @@
         if (this.openMonthSelector && selector && !selector.contains(event.target)) {
           this.openMonthSelector = false;
         }
+      },
+      handleContainerClick(){
+        this.toggleMenu();
       },
       toggleMenu(){
         this.$parent.toggleMenu()
@@ -193,25 +196,28 @@
                 margin-bottom: 10px;
                 cursor: pointer;
                 position: relative;
+                transition: background-color 0.2s ease-in-out;
                 &:after{
                     content: "";
-                    width:40px;
-                    height:3px;
+                    width:25px;
+                    height:2px;
                     background-color: $nightBlue;
                     position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%,-50%) rotate(45deg);
+                    transition: background-color 0.2s ease-in-out;
                 }
                 &:before{
                     content: "";
-                    width:40px;
-                    height:3px;
+                    width:25px;
+                    height:2px;
                     background-color: $nightBlue;
                     position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%,-50%) rotate(-45deg);
+                    transition: background-color 0.2s ease-in-out;
                 }
                 &:hover{
                     background-color: $nightBlue;
@@ -306,7 +312,7 @@
                 .menu_link_btn{
                     font-family: "Figtree-Bold";
                     font-size: 16px;
-                    color: $nightBlue;
+                    color: #2d2b2c;
                     background-color: $yellow;
                     padding: 12px 26px;
                     border-radius: 40px;
@@ -337,11 +343,15 @@
                         cursor: pointer;
                         margin-right: 10px;
                         position: relative;
+                        transition: background-color 0.2s ease-in-out;
                         svg{
                             position: absolute;
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%,-50%);
+                            path{
+                                transition: fill 0.2s ease-in-out;
+                            }
                         }
                         &:hover{
                             background-color: $nightBlue;

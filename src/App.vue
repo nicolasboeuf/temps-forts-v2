@@ -84,7 +84,7 @@ export default {
     }
     #homepage{
       #homepageContainer{
-        top:0px!important;
+        top:50px!important;
         opacity: 0!important;
       }
     }
@@ -105,6 +105,18 @@ export default {
   @media (max-width: 979px) {
     #app{
       overflow:hidden;
+      #homepage{
+        #homepageContainer{
+          top:-50px!important;
+        }
+      }
+      &.appear{
+        #homepage{
+          #homepageContainer{
+            top:20px!important;
+          }
+        }
+      }
     }
   }
   
