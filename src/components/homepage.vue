@@ -1,6 +1,6 @@
 <template>
-  <div id="homepage">
-    <div id="homepageContainer">
+  <div id="homepage" :class="exit?'exit':''">
+    <div id="homepageContainer" >
       <div id="homepageTitle"><span>Découvrez<br>nos Temps Forts</span></div>
       <div id="homepageButton" @click="changeAppState('frise')">Explorer</div>
     </div>
@@ -14,6 +14,7 @@ export default {
   name: 'Homepage',
   data(){
     return {
+      exit:false
     }
   },
   props: {
@@ -25,13 +26,18 @@ export default {
   },
   methods: {
     changeAppState(state){
-      this.$emit('changeAppState', state)
-      if (window.location.pathname !== '/') {
-        const baseUrl = window.location.pathname.split('/')[1]
-        window.history.pushState({}, '', `/${baseUrl}/frise`) 
-      } else {
-        window.history.pushState({}, '', '/frise')
-      }
+      var self = this
+      this.$parent.exitingHome = true
+      setTimeout(() => {
+        self.$emit('changeAppState', state)
+        if (window.location.pathname !== '/') {
+          const baseUrl = window.location.pathname.split('/')[1]
+          window.history.pushState({}, '', `/${baseUrl}/frise`) 
+        } else {
+          window.history.pushState({}, '', '/frise')
+        }
+        self.$parent.exitingHome = false
+      }, 1000)
     }
   },
 

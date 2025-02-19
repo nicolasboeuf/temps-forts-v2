@@ -213,24 +213,45 @@
       bottom: 0;
       transition: background-color 0.5s ease-in-out;
       &.style1{
-        background-color:$mintBlue;
+        background-color:$deepBlue;
       }
       &.style2{
-        background-color:$orange;
+        background-color:$deepBlue;
       }
       &.style3{
-        background-color:$springGreen;
+        background-color:$deepBlue;
       }
       &.style4{
-        background-color:$violet;
+        background-color:$deepBlue;
       }
       &.style5{
-        background-color:$paleFushia;
+        background-color:$deepBlue;
       }
       &.style6{
-        background-color:$tropicalBlue;
+        background-color:$deepBlue;
       }
       &.appear{
+        &.style1{
+            background-color:$mintBlue;
+        }
+        &.style2{
+            background-color:$orange;
+        }
+        &.style3{
+            background-color:$springGreen;
+        }
+        &.style4{
+            background-color:$violet;
+        }
+        &.style5{
+            background-color:$paleFushia;
+        }
+        &.style6{
+            background-color:$tropicalBlue;
+        }
+        #menu_btn{
+            left:10px;
+        }
         #event_container{
             transform: translateX(0);
             #event_image_container{
@@ -254,13 +275,13 @@
       #menu_btn{
         position: absolute;
         top: 10px;
-        left: 10px;
+        left: -50px;
         width: 40px;
         height: 40px;
         background-color: white;
         cursor: pointer;
         z-index: 100;
-        transition: background-color 0.2s ease-in-out;
+        transition: background-color 0.2s ease-in-out, left 0.8s ease-in-out;
         div{
             width: 30px;
             height: 2px;

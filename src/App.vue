@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="appear||appState == 'frise'?'appear':''">
+  <div id="app" :class="[appear||appState == 'frise'?'appear':'', exitingHome?'exitinghome':'']">
     <appHeader :appState="appState"></appHeader>
     <homepage v-if="appState == 'homepage' " @changeAppState="changeAppState"></homepage>
     <frisepage v-if="appState == 'frise' "></frisepage>
@@ -25,7 +25,8 @@ export default {
   data(){
     return {
       appState:"homepage",
-      appear:false
+      appear:false,
+      exitingHome:false
     }
   },
 
@@ -44,7 +45,7 @@ export default {
   methods:{
     changeAppState(state){
       this.appState = state
-    }
+    },
   },
   
   created(){
@@ -98,6 +99,16 @@ export default {
           top:190px!important;
           opacity: 1!important;
         }
+      }
+    }
+    &.exitinghome{
+      #homepage{
+        #homepageContainer{
+          opacity: 0!important;
+        }
+      }
+      #appHeader{
+        top:-120px!important;
       }
     }
   }
