@@ -67,7 +67,7 @@
             var blend = "normal"
             if(event.dataid==this.currentEventId||this.hoverEvent==index){
 
-                switch(this.myData[index].color_theme){
+                switch(this.reverseOrderEvents[index].color_theme){
                     case 1:
                         bg = "linear-gradient(0deg, #B9348B 0%, #B9348B 100%), linear-gradient(0deg, rgba(185, 52, 139, 0.90) 0%, rgba(185, 52, 139, 0.90) 100%), url('" + require('@/assets/img/event/'+event.id+'.png') + "') lightgray 50% / cover no-repeat"
                         break;

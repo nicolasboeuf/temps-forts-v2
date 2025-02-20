@@ -13,9 +13,39 @@ import AppHeader from './components/appHeader.vue'
 import store from '@/store'
 import { getData } from './import.js'
 import Frisepage from './components/frisepage.vue'
+import Vue from 'vue'
+import VueMeta from 'vue-meta'
+Vue.use(VueMeta)
 
 export default {
   name: 'App',
+  metaInfo: {
+    title: 'Nos Temps Forts',
+    meta: [
+      {
+        name: 'description',
+        content: "Explorez les temps forts d'Assurance Prévention au fil des mois #Route #Maison #Santé #Loisirs #Prévention"
+      },
+      {
+        name: 'keywords',
+        content: 'assurance, prevention'
+      },
+      {
+        name: 'robots',
+        content: 'index, follow'
+      },
+      {
+        name: 'language',
+        content: 'French'
+      },
+    ],
+    link: [
+      {
+        rel:'icon',
+        href:'https://www.assurance-prevention.fr/wp-content/themes/webqam/assets/favicons/favicon.ico'
+      }
+    ]
+  },
   components: {
     Homepage,
     AppHeader,

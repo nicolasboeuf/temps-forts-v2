@@ -105,6 +105,11 @@
           height: 60px;
           &.homepage{
             height: 100px;
+            img{
+              left:30px;
+              right: auto;
+              width: 208px;
+            }
           }
           h1{
               display: none;
@@ -113,7 +118,6 @@
             left:auto;
             right: 12px;
             width: 144px;
-            
           }
         }
     }

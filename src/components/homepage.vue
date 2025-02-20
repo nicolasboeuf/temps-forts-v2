@@ -72,6 +72,7 @@ export default {
       display: block;
       transition: all 0.8s ease-in-out;
       transition-delay: 0.3s;
+      min-width: 300px;
       #homepageTitle{
         font-family: Montserrat-ExtraBold;
         font-size: 45px;
@@ -100,6 +101,20 @@ export default {
         &:hover{
           text-decoration: underline;
         }
+      }
+    }
+  }
+
+  @media (max-width: 979px) {
+    #homepage{
+      #homepageContainer{
+        #homepageTitle{
+          font-size: 40px;
+          span{
+            line-height: 70px;
+          }
+        }
+        
       }
     }
   }

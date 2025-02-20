@@ -3,7 +3,7 @@
         <div id="menu_container">
             <div id="menu_wrapper" @click.self="handleContainerClick">
                 <div id="menu_close" @click="toggleMenu()"></div>
-                <div id="menu_title">
+                <div id="menu_title" @click="callChangeAppState('homepage')">
                     <span>Nos Temps Forts</span>
                 </div>
                 <div id="menu_month_selector">
@@ -96,6 +96,10 @@
       }
     },
     methods: {
+      callChangeAppState(state){
+        this.$parent.$parent.changeAppState(state)
+        window.history.pushState({}, '', '/')
+      },
       handleClickOutside(event) {
         const selector = document.getElementById('menu_month_selector_title');
         if (this.openMonthSelector && selector && !selector.contains(event.target)) {
@@ -234,6 +238,10 @@
                 font-size: 30px;
                 color: $deepBlue;
                 margin-bottom: 10px;
+                cursor: pointer;
+                &:hover{
+                    text-decoration: underline;
+                }
             }
             #menu_month_selector{
                 margin-bottom: 32px;

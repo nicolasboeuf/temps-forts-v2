@@ -105,6 +105,9 @@
                 window.location.hash = self.currentEventId
                 self.isHiddenPrev = true;
                 setTimeout(() => {
+                    document.getElementById('event_container').scrollTo({
+                        top: 0,
+                    });
                     self.isHiddenPrev = false;
                     self.prevAnimation = false;
                 }, 20);
@@ -119,6 +122,9 @@
                 window.location.hash = self.currentEventId
                 self.isHiddenNext = true;
                 setTimeout(() => {
+                    document.getElementById('event_container').scrollTo({
+                        top: 0,
+                    });
                     self.isHiddenNext = false;
                     self.nextAnimation = false;
                 }, 20);
@@ -387,7 +393,7 @@
                 background-repeat: no-repeat;
                 background-position: center;
                 position: absolute;
-                border-radius: 3px;
+                border-radius: 10px;
                 border: 2px solid rgba(0, 0, 0, 0.08);
                 box-sizing: border-box;
             }
@@ -598,7 +604,7 @@
                 &.prev_animation{
                     #event_image_container{
                         #event_title{
-                            max-width: 320px;
+                            //max-width: 320px;
                             margin-left:0px;
                         }
                         #event_buttons{

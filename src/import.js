@@ -29,7 +29,6 @@ export const getData = async function (store) {
         
         var allItems = []
         _.each(newData.feed.entry, function (item){
-
           _.each(item, function (property){
             if(property.$t === undefined) property.$t = "";
           })
@@ -43,6 +42,7 @@ export const getData = async function (store) {
               datelabel:item.gsx$datelabel.$t,
               titre:item.gsx$titre.$t,
               type:item.gsx$type.$t,
+              color:item.gsx$color.$t,
               bouton1_url:item.gsx$bouton1url.$t,
               bouton1_texte:item.gsx$bouton1texte.$t,
               bouton1_type:item.gsx$bouton1type.$t,
@@ -84,8 +84,25 @@ export const getData = async function (store) {
 
         allItems.reverse();
 
+        var colorCounter = 1
+
         allItems.forEach((item, index) => {
-            item.color_theme = (index % 6) + 1;
+          console.log(item.id, index)
+            if(item.color !== ""){
+              item.color_theme = parseInt(item.color.charAt(0));
+              if(parseInt(item.color.charAt(0)) === 6){
+                colorCounter = 1;
+              }else{
+                colorCounter=parseInt(item.color.charAt(0))+1;
+              }
+            }else{
+              item.color_theme = colorCounter;
+              if(colorCounter === 6){
+                colorCounter = 1;
+              }else{
+                colorCounter++;
+              }
+            }
         });
 
         console.log(allItems)
