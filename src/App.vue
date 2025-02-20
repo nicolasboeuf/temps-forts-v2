@@ -24,7 +24,7 @@ export default {
     meta: [
       {
         name: 'description',
-        content: "Explorez les temps forts d'Assurance Prévention au fil des mois #Route #Maison #Santé #Loisirs #Prévention"
+        content: 'Explorez les temps forts d\'Assurance Prévention au fil des mois #Route #Maison #Santé #Loisirs #Prévention'
       },
       {
         name: 'keywords',
@@ -38,6 +38,18 @@ export default {
         name: 'language',
         content: 'French'
       },
+      {
+        property: 'og:title',
+        content: 'Nos Temps Forts'
+      },
+      {
+        property: 'og:image',
+        content: 'https://nicolasboeuf.fr/temps-forts-v2/img/share.png'
+      },
+      {
+        property: 'og:description',
+        content: 'Explorez les temps forts d\'Assurance Prévention au fil des mois #Route #Maison #Santé #Loisirs #Prévention'
+      }
     ],
     link: [
       {
@@ -162,3 +174,8 @@ export default {
   }
   
 </style>
+
+<!-- 
+<meta property="og:title" content="Nos Temps Forts"><meta property="og:image" content="https://nicolasboeuf.fr/temps-forts-v2/img/share.png"><meta property="og:description" content="Explorez les temps forts d'Assurance Prévention au fil des mois #Route #Maison #Santé #Loisirs #Prévention"><title>Nos Temps Forts</title>
+
+-->
