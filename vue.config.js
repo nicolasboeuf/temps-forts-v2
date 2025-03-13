@@ -9,7 +9,7 @@ module.exports = {
   },
   filenameHashing: false,
   productionSourceMap: false,
-  publicPath: '/temps-forts-v2/',
+  publicPath: '/',
   chainWebpack:
     config => {
       config.optimization.delete('splitChunks')
